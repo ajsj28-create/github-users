@@ -71,7 +71,7 @@ const onSearch = async (eve) => {
   let [userDetailsArray, userReposArray] = await Promise.all(promiseArray)
   cl(userDetailsArray, userReposArray)
   if(userReposArray.length > 5){
-    userDetailsArray = userDetailsArray.slice(0, 5)
+    userReposArray = userReposArray.slice(0, 5)
   }
   showDash(userDetailsArray, userReposArray)
 };
