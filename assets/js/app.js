@@ -68,12 +68,12 @@ const onSearch = async (eve) => {
   let userDetails_url = `${base_url}/${username}`
   let userRepos_url = `${userDetails_url}/repos?sort=created`
   let promiseArray = [makeApiCall('GET', userDetails_url, null), makeApiCall('GET', userRepos_url, null)]
-  let [userDetailsArray, userReposArray] = await Promise.all(promiseArray)
-  cl(userDetailsArray, userReposArray)
+  let [userDetailsObj, userReposArray] = await Promise.all(promiseArray)
+  cl(userDetailsObj, userReposArray)
   if(userReposArray.length > 5){
     userReposArray = userReposArray.slice(0, 5)
   }
-  showDash(userDetailsArray, userReposArray)
+  showDash(userDetailsObj, userReposArray)
 };
 
 usernameForm.addEventListener('submit', onSearch)
