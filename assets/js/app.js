@@ -30,30 +30,35 @@ const makeApiCall = async (method, url, body) => {
   }
 };
 
+const createRepoLinks = (arr) => {
+  let result = ``
+  arr.forEach(obj => {
+    result += `<li><a href="https://github.com/${obj.full_name}" target="_blank">${obj.name}</a></li>`
+  })
+  return result
+};
+
 const showDash = (obj, arr) => {
+  let noName = "Anonymous"
   let result = `
     <div class="col-lg-6 col-md-8 row py-4 bg-teal rad-10">
-				<div class="col-3 p-0 d-flex justify-content-center align-items-center">
-					<figure class="avatarImg m-0">
-						<img src="${obj.avatar_url}" alt="Img">
-					</figure>
-				</div>
-				<div class="col-9">
-					<h4>${obj.name}</h4>
-					<ul class="social p-0 mb-2">
-						<li>${obj.followers} Followers</li>
-						<li>${obj.following} Following</li>
-						<li>${obj.public_repos} Repos</li>
-					</ul>
-					<ul class="rapoLinks p-0 m-0">
-						<li><a href="https://github.com/${arr[0].full_name}" target="_blank">${arr[0].name}</a></li>
-						<li><a href="https://github.com/${arr[1].full_name}" target="_blank">${arr[1].name}</a></li>
-						<li><a href="https://github.com/${arr[2].full_name}" target="_blank">${arr[2].name}</a></li>
-						<li><a href="https://github.com/${arr[3].full_name}" target="_blank">${arr[3].name}</a></li>
-						<li><a href="https://github.com/${arr[4].full_name}" target="_blank">${arr[4].name}</a></li>
-					</ul>
-				</div>
-			</div>`
+			<div class="col-3 p-0 d-flex justify-content-center align-items-center">
+				<figure class="avatarImg m-0">
+					<img src="${obj.avatar_url}" alt="Img">
+				</figure>
+			</div>
+			<div class="col-9">
+				<h4>${obj.name || noName}</h4>
+				<ul class="social p-0 mb-2">
+					<li>${obj.followers} Followers</li>
+					<li>${obj.following} Following</li>
+					<li>${obj.public_repos} Repos</li>
+				</ul>
+				<ul class="rapoLinks p-0 m-0">
+          ${createRepoLinks(arr)}
+				</ul>
+			</div>
+		</div>`
   dashBoard.innerHTML = result
 }
 
@@ -65,6 +70,9 @@ const onSearch = async (eve) => {
   let promiseArray = [makeApiCall('GET', userDetails_url, null), makeApiCall('GET', userRepos_url, null)]
   let [userDetailsArray, userReposArray] = await Promise.all(promiseArray)
   cl(userDetailsArray, userReposArray)
+  if(userReposArray.length > 5){
+    userDetailsArray = userDetailsArray.slice(0, 5)
+  }
   showDash(userDetailsArray, userReposArray)
 };
 
