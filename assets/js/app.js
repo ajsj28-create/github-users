@@ -18,7 +18,7 @@ const makeApiCall = async (method, url, body) => {
       }
     })
     if(!res.ok){
-      console.error(`${res.status}: Error occured`)
+      throw new Error(`${res.status}: Error occured`)
     }else{
       return res.json()
     }
